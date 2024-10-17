@@ -1,9 +1,15 @@
 import mongoose from "mongoose";
 
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ["user", "admin", "cabDriver"], default: "user" },
+});
+
 const locationSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
 });
-
 const routeSchema = new mongoose.Schema({
   from: {
     type: mongoose.Schema.Types.ObjectId,
@@ -17,6 +23,7 @@ const routeSchema = new mongoose.Schema({
 const cabSchema = new mongoose.Schema({
   name: { type: String, required: true },
   pricePerMinute: { type: Number, required: true },
+  driver: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 const bookingSchema = new mongoose.Schema({
@@ -42,6 +49,7 @@ const bookingSchema = new mongoose.Schema({
   },
 });
 
+export const User = mongoose.models.User || mongoose.model("User", userSchema);
 export const Location =
   mongoose.models.Location || mongoose.model("Location", locationSchema);
 export const Route =

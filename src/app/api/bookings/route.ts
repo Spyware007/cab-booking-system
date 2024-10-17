@@ -1,29 +1,54 @@
+// app/api/bookings/route.ts
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import dbConnect from "@/lib/dbConnect";
 import { Booking, Route, Cab, Location } from "@/models";
 import { findShortestPath } from "@/utils/graph";
-
-async function updateBookingStatus(booking) {
-  const now = new Date();
-  if (booking.status === "Pending" && now > new Date(booking.endTime)) {
-    booking.status = "Completed";
-    await booking.save();
-  }
-  return booking;
-}
+import mongoose from "mongoose";
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (
+    !session ||
+    (session.user?.role !== "user" && session.user?.role !== "admin")
+  ) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   await dbConnect();
-  const { email, source, destination, cabId } = await req.json();
 
   try {
+    const { source, destination, cabId } = await req.json();
+
+    // Validate inputs
+    if (!source || !destination || !cabId) {
+      console.log({ source, destination, cabId });
+      return NextResponse.json(
+        { success: false, error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // Validate ObjectIds
+    if (
+      !mongoose.isValidObjectId(source) ||
+      !mongoose.isValidObjectId(destination) ||
+      !mongoose.isValidObjectId(cabId)
+    ) {
+      return NextResponse.json(
+        { success: false, error: "Invalid ID format" },
+        { status: 400 }
+      );
+    }
+
     const routes = await Route.find({}).populate("from to");
-    const graph = {};
+    const graph: { [key: string]: { [key: string]: number } } = {};
     routes.forEach((route) => {
       if (!graph[route.from.name]) graph[route.from.name] = {};
       if (!graph[route.to.name]) graph[route.to.name] = {};
 
-      // Add route in both directions
       graph[route.from.name][route.to.name] = route.duration;
       graph[route.to.name][route.from.name] = route.duration;
     });
@@ -52,6 +77,13 @@ export async function POST(req: Request) {
     }
 
     const cab = await Cab.findById(cabId);
+    if (!cab) {
+      return NextResponse.json(
+        { success: false, error: "Invalid cab selected" },
+        { status: 400 }
+      );
+    }
+
     const cost = duration * cab.pricePerMinute;
 
     const startTime = new Date();
@@ -77,7 +109,7 @@ export async function POST(req: Request) {
     }
 
     const booking = await Booking.create({
-      userEmail: email,
+      userEmail: session.user.email,
       source,
       destination,
       cab: cabId,
@@ -92,58 +124,34 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (error) {
+    console.error("Error creating booking:", error);
     return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 400 }
+      { success: false, error: "An error occurred while creating the booking" },
+      { status: 500 }
     );
   }
 }
 
 export async function GET() {
-  await dbConnect();
-  try {
-    let bookings = await Booking.find({}).populate("cab source destination");
+  const session = await getServerSession(authOptions);
 
-    // Update status for each booking
-    bookings = await Promise.all(bookings.map(updateBookingStatus));
+  if (!session || session.user?.role !== "user") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  await dbConnect();
+
+  try {
+    const bookings = await Booking.find({ userEmail: session.user.email })
+      .populate("cab source destination")
+      .sort({ startTime: -1 });
 
     return NextResponse.json({ success: true, data: bookings });
   } catch (error) {
+    console.error("Error fetching user bookings:", error);
     return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 400 }
-    );
-  }
-}
-
-export async function PUT(req: Request) {
-  await dbConnect();
-  const { id, status } = await req.json();
-
-  try {
-    let booking = await Booking.findById(id).populate("cab source destination");
-
-    if (!booking) {
-      return NextResponse.json(
-        { success: false, error: "Booking not found" },
-        { status: 404 }
-      );
-    }
-
-    // Check if the booking should be automatically completed
-    booking = await updateBookingStatus(booking);
-
-    // Only update the status if it's not already completed
-    if (booking.status !== "Completed") {
-      booking.status = status;
-      await booking.save();
-    }
-
-    return NextResponse.json({ success: true, data: booking });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 400 }
+      { success: false, error: "An error occurred" },
+      { status: 500 }
     );
   }
 }
