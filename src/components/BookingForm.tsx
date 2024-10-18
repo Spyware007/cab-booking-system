@@ -98,6 +98,14 @@ export default function BookingForm() {
       });
       return;
     }
+    if (booking.source === booking.destination) {
+      toast({
+        title: "Error",
+        description: "Source and destination cannot be the same",
+        variant: "destructive",
+      });
+      return;
+    }
 
     try {
       const pathRes = await fetch("/api/bookings/path", {
@@ -226,7 +234,7 @@ export default function BookingForm() {
           <div className="w-full lg:w-1/2 z-10">
             <div className="max-w-lg">
               <h1 className="text-4xl md:text-6xl font-bold mb-4">
-                Go anywhere with Uber
+                Go anywhere with Truber
               </h1>
               <p className="text-xl mb-8">Request a ride, hop in, and go</p>
               <form onSubmit={handleSubmit} className="space-y-4">

@@ -30,7 +30,7 @@ export default function LoginPage() {
       if (result?.error) {
         toast({
           title: "Error",
-          description: result.error,
+          description: "Inavlid email or password",
           variant: "destructive",
         });
       } else {
