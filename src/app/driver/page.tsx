@@ -16,22 +16,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-interface Cab {
-  _id: string;
-  name: string;
-  pricePerMinute: number;
-}
-
-interface Booking {
-  _id: string;
-  userEmail: string;
-  source: { name: string };
-  destination: { name: string };
-  startTime: string;
-  endTime: string;
-  status: string;
-}
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Cab, Booking, CabType } from "@/types";
 
 export default function DriverDashboard() {
   const { data: session, status } = useSession();
@@ -40,6 +32,7 @@ export default function DriverDashboard() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [name, setName] = useState("");
   const [pricePerMinute, setPricePerMinute] = useState("");
+  const [type, setType] = useState<CabType>(CabType.UBERX);
 
   useEffect(() => {
     if (
@@ -54,12 +47,28 @@ export default function DriverDashboard() {
   }, [session, status]);
 
   const fetchCabDetails = async () => {
-    const res = await fetch("/api/driver/cab");
-    const data = await res.json();
-    if (data.success) {
-      setCab(data.data);
-      setName(data.data.name);
-      setPricePerMinute(data.data.pricePerMinute.toString());
+    try {
+      const res = await fetch("/api/driver/cab");
+      const data = await res.json();
+      if (data.success) {
+        setCab(data.data);
+        setName(data.data.name);
+        setPricePerMinute(data.data.pricePerMinute.toString());
+        setType(data.data.type);
+      } else {
+        toast({
+          title: "Error",
+          description: data.error || "Failed to fetch cab details",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching cab details:", error);
+      toast({
+        title: "Error",
+        description: "An error occurred while fetching cab details",
+        variant: "destructive",
+      });
     }
   };
 
@@ -73,12 +82,14 @@ export default function DriverDashboard() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log({ type });
     const res = await fetch("/api/driver/cab", {
       method: cab ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name,
         pricePerMinute: parseFloat(pricePerMinute),
+        type,
       }),
     });
     const data = await res.json();
@@ -122,6 +133,18 @@ export default function DriverDashboard() {
           onChange={(e) => setPricePerMinute(e.target.value)}
           required
         />
+        <Select value={type} onValueChange={(value: CabType) => setType(value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select cab type" />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.values(CabType).map((cabType) => (
+              <SelectItem key={cabType} value={cabType}>
+                {cabType.charAt(0).toUpperCase() + cabType.slice(1)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Button type="submit">
           {cab ? "Update Cab Details" : "Register Cab"}
         </Button>

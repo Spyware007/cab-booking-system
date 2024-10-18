@@ -7,9 +7,12 @@
     "build": "next build",
     "start": "next start -p 3001",
     "lint": "next lint",
-    "init-db": "tsx -r tsconfig-paths/register src/scripts/initDb.ts"
+    "init-db": "tsx -r tsconfig-paths/register src/scripts/initDb.ts",
+    "type-migration": "tsx -r tsconfig-paths/register src/scripts/typeMigration.ts"
   },
   "dependencies": {
+    "@radix-ui/react-checkbox": "^1.1.2",
+    "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-select": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.0",
