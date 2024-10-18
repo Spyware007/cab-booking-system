@@ -38,15 +38,17 @@ npm run dev
 
 ## Features
 
-- User authentication
+- User authentication (user, admin and driver)
 - Cab booking management
 - Admin panel for managing locations, routes, and cabs
-- Email notifications
+- Email notifications (using smtp google and nodemailer)
+
+# [Watch the video demo](https://drive.google.com/file/d/1ptH9gcLYFKYuvBVdqoVyvpLQwNXZOXiw/view?usp=sharing)
 
 ## Screenshots
 
 <div align="center" style="display:flex">
-  <img width="500px" src="./readme_assets/imag31.png">
+  <img width="500px" src="./readme_assets/image1.png">
 </div>
 
 <table>
@@ -67,6 +69,31 @@ npm run dev
     <td><img width="500px" src="readme_assets/image9.png" alt="User Profile"></td>
   </tr>
 </table>
+
+## Tech Stack
+
+- **Frontend:**
+
+  - Next.js 14
+  - Tailwind CSS
+  - shadcn/ui components
+  - framer-motion
+
+- **Backend:**
+
+  - Next.js api routes
+  - MongoDB
+
+- **Authentication:**
+
+  - NextAuth.js
+
+- **Other Tools:**
+
+  - TypeScript
+  - Zustand
+  - Nodemailer
+  - Lucide Icons
 
 ## Contributing
 
