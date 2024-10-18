@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Cab, Booking, CabType } from "@/types";
+import Loader from "@/components/Loader";
 
 export default function DriverDashboard() {
   const { data: session, status } = useSession();
@@ -110,7 +111,11 @@ export default function DriverDashboard() {
   };
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <Loader />
+      </>
+    );
   }
 
   return (

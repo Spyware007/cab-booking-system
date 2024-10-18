@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Loader from "@/components/Loader";
 
 interface Booking {
   _id: string;
@@ -82,7 +83,11 @@ export default function AdminDashboard() {
   };
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <Loader />
+      </>
+    );
   }
 
   return (

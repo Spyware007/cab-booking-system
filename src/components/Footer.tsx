@@ -94,7 +94,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-12 border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p>&copy; 2024 Uber Technologies Inc.</p>
+          <p>&copy; 2024 Truber Technologies Inc.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <Link href="#" className="hover:text-gray-300">
               Privacy

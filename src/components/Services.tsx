@@ -7,7 +7,7 @@ function DriveWithUs() {
           <div className="md:w-1/2 mb-8 md:mb-0">
             <Image
               src="/banners/service1.png"
-              alt="Drive with Uber"
+              alt="Drive with Truber"
               width={500}
               height={500}
               className="rounded-lg"
@@ -19,7 +19,7 @@ function DriveWithUs() {
             </h2>
             <p className="mb-6">
               Make money on your schedule with deliveries or rides—or both. You
-              can use your own car or choose a rental through Uber.
+              can use your own car or choose a rental through Truber.
             </p>
             <button className="bg-black text-white font-bold py-3 px-6 rounded">
               Get started
@@ -39,7 +39,7 @@ function Business() {
           <div className="md:w-1/2 mb-8 md:mb-0">
             <Image
               src="/banners/service3.png"
-              alt="Uber for Business"
+              alt="Truber for Business"
               width={500}
               height={500}
               className="rounded-lg"
@@ -49,7 +49,7 @@ function Business() {
             <h2 className="text-3xl font-bold mb-4">Uber for Business</h2>
             <p className="mb-6">
               Transform the way your company moves and feeds its people with
-              Uber for Business.
+              Truber for Business.
             </p>
             <button className="bg-black text-white font-bold py-3 px-6 rounded">
               Learn more
