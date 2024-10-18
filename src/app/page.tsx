@@ -1,14 +1,25 @@
+"use client";
+
+import { useSession } from "next-auth/react";
 import BookingForm from "@/components/BookingForm";
 import LocationMap from "@/components/LocationMap";
+import { Business, DriveWithUs } from "@/components/Services";
 
 export default function Home() {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <main className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Cab Booking System</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <main className="">
+      <>
         <BookingForm />
         <LocationMap />
-      </div>
+        <DriveWithUs />
+        <Business />
+      </>
     </main>
   );
 }

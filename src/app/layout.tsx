@@ -1,13 +1,11 @@
-import "./globals.css";
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
+import Navbar from "@/components/Navbar";
+import AuthProvider from "@/components/AuthProvider";
+import "./globals.css";
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Cab Booking System",
-  description: "Book your cab with ease",
-};
 
 export default function RootLayout({
   children,
@@ -16,7 +14,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <AuthProvider>
+          <Navbar />
+          {children}
+          <Footer />
+          <Toaster />
+        </AuthProvider>
+      </body>
     </html>
   );
 }
