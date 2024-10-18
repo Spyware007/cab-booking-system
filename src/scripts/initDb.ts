@@ -6,21 +6,20 @@ const routes = [
   { from: "A", to: "B", duration: 5 },
   { from: "A", to: "C", duration: 7 },
   { from: "B", to: "D", duration: 15 },
-  { from: "B", to: "C", duration: 20 },
+  { from: "B", to: "E", duration: 20 },
   { from: "C", to: "D", duration: 5 },
   { from: "C", to: "E", duration: 35 },
-  { from: "D", to: "E", duration: 20 },
   { from: "D", to: "F", duration: 20 },
   { from: "E", to: "F", duration: 10 },
 ];
 
-const cabs = [
-  { name: "Economy", pricePerMinute: 1 },
-  { name: "Comfort", pricePerMinute: 1.5 },
-  { name: "Premium", pricePerMinute: 2 },
-  { name: "SUV", pricePerMinute: 2.5 },
-  { name: "Luxury", pricePerMinute: 3 },
-];
+// const cabs = [
+//   { name: "Economy", pricePerMinute: 1 },
+//   { name: "Comfort", pricePerMinute: 1.5 },
+//   { name: "Premium", pricePerMinute: 2 },
+//   { name: "SUV", pricePerMinute: 2.5 },
+//   { name: "Luxury", pricePerMinute: 3 },
+// ];
 
 async function initDb() {
   await dbConnect();
@@ -28,7 +27,7 @@ async function initDb() {
   // Clear existing data
   await Location.deleteMany({});
   await Route.deleteMany({});
-  await Cab.deleteMany({});
+  // await Cab.deleteMany({});
 
   // Create locations
   const locationDocs = await Location.create(
@@ -49,7 +48,7 @@ async function initDb() {
   );
 
   // Create cabs
-  await Cab.create(cabs);
+  // await Cab.create(cabs);
 
   console.log("Database initialized successfully");
   process.exit(0);

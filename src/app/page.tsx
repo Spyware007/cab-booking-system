@@ -16,9 +16,9 @@ export default function Home() {
     <main className="">
       <>
         <BookingForm />
+        <LocationMap />
         <DriveWithUs />
         <Business />
-        {/* <LocationMap /> */}
       </>
     </main>
   );
