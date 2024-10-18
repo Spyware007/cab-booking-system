@@ -8,7 +8,12 @@ export default function Footer() {
   return (
     <footer
       className={`${
-        pathname !== "/login" && pathname !== "/signup" ? "block" : "hidden"
+        pathname !== "/login" &&
+        pathname !== "/signup" &&
+        pathname !== "/admin" &&
+        pathname !== "/driver"
+          ? "block"
+          : "hidden"
       } bg-black text-white py-12`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -12,7 +11,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import Loader from "@/components/Loader";
+import DashboardLayout from "@/components/DashboardLayout";
 
 interface Booking {
   _id: string;
@@ -83,89 +86,170 @@ export default function AdminDashboard() {
   };
 
   if (status === "loading") {
-    return (
-      <>
-        <Loader />
-      </>
-    );
+    return <Loader />;
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+    <DashboardLayout>
+      <div className="container mx-auto p-4">
+        <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Total Bookings</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-4xl font-bold">{bookings.length}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Total Cabs</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-4xl font-bold">{cabs.length}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Total Users</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-4xl font-bold">{users.length}</p>
+            </CardContent>
+          </Card>
+        </div>
 
-      <h2 className="text-xl font-semibold mb-4">All Bookings</h2>
-      <Table>
-        <TableCaption>List of all bookings</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>User Email</TableHead>
-            <TableHead>From</TableHead>
-            <TableHead>To</TableHead>
-            <TableHead>Cab</TableHead>
-            <TableHead>Start Time</TableHead>
-            <TableHead>End Time</TableHead>
-            <TableHead>Cost</TableHead>
-            <TableHead>Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {bookings.map((booking) => (
-            <TableRow key={booking._id}>
-              <TableCell>{booking.userEmail}</TableCell>
-              <TableCell>{booking.source.name}</TableCell>
-              <TableCell>{booking.destination.name}</TableCell>
-              <TableCell>{booking.cab.name}</TableCell>
-              <TableCell>
-                {new Date(booking.startTime).toLocaleString()}
-              </TableCell>
-              <TableCell>
-                {new Date(booking.endTime).toLocaleString()}
-              </TableCell>
-              <TableCell>${booking.cost.toFixed(2)}</TableCell>
-              <TableCell>{booking.status}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-      <h2 className="text-xl font-semibold mb-4 mt-8">All Cabs</h2>
-      <Table>
-        <TableCaption>List of all cabs</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Price Per Minute</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {cabs.map((cab) => (
-            <TableRow key={cab._id}>
-              <TableCell>{cab.name}</TableCell>
-              <TableCell>${cab.pricePerMinute.toFixed(2)}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-      <h2 className="text-xl font-semibold mb-4 mt-8">All Users</h2>
-      <Table>
-        <TableCaption>List of all users</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Email</TableHead>
-            <TableHead>Role</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {users.map((user) => (
-            <TableRow key={user._id}>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{user.role}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+        <Tabs defaultValue="bookings" className="w-full">
+          <TabsList className="mb-4">
+            <TabsTrigger value="bookings">Bookings</TabsTrigger>
+            <TabsTrigger value="cabs">Cabs</TabsTrigger>
+            <TabsTrigger value="users">Users</TabsTrigger>
+          </TabsList>
+          <TabsContent value="bookings">
+            <Card>
+              <CardHeader>
+                <CardTitle>All Bookings</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableCaption>List of all bookings</TableCaption>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>User Email</TableHead>
+                        <TableHead>From</TableHead>
+                        <TableHead>To</TableHead>
+                        <TableHead>Cab</TableHead>
+                        <TableHead>Start Time</TableHead>
+                        <TableHead>End Time</TableHead>
+                        <TableHead>Cost</TableHead>
+                        <TableHead>Status</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {bookings.map((booking) => (
+                        <TableRow key={booking._id}>
+                          <TableCell>{booking.userEmail}</TableCell>
+                          <TableCell>{booking.source.name}</TableCell>
+                          <TableCell>{booking.destination.name}</TableCell>
+                          <TableCell>{booking.cab.name}</TableCell>
+                          <TableCell>
+                            {new Date(booking.startTime).toLocaleString()}
+                          </TableCell>
+                          <TableCell>
+                            {new Date(booking.endTime).toLocaleString()}
+                          </TableCell>
+                          <TableCell>${booking.cost.toFixed(2)}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                booking.status === "completed"
+                                  ? "success"
+                                  : "default"
+                              }
+                            >
+                              {booking.status}
+                            </Badge>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="cabs">
+            <Card>
+              <CardHeader>
+                <CardTitle>All Cabs</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableCaption>List of all cabs</TableCaption>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Price Per Minute</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {cabs.map((cab) => (
+                        <TableRow key={cab._id}>
+                          <TableCell>{cab.name}</TableCell>
+                          <TableCell>
+                            ${cab.pricePerMinute.toFixed(2)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="users">
+            <Card>
+              <CardHeader>
+                <CardTitle>All Users</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableCaption>List of all users</TableCaption>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Role</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {users.map((user) => (
+                        <TableRow key={user._id}>
+                          <TableCell>{user.email}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                user.role === "admin"
+                                  ? "destructive"
+                                  : "outline"
+                              }
+                            >
+                              {user.role}
+                            </Badge>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </DashboardLayout>
   );
 }
