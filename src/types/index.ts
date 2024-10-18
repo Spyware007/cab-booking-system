@@ -1,5 +1,3 @@
-// types/models.ts
-
 export enum CabType {
   UBERX = "uberx",
   BLACK_SUV = "blacksuv",

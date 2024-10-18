@@ -49,7 +49,6 @@ export async function POST(req: Request) {
   try {
     const { name, pricePerMinute, type = CabType.UBERX } = await req.json();
 
-    // Validate cab type
     if (!Object.values(CabType).includes(type)) {
       return NextResponse.json(
         { success: false, error: "Invalid cab type" },
@@ -102,7 +101,6 @@ export async function PUT(req: Request) {
       );
     }
 
-    // First, find the cab
     let cab = await Cab.findOne({ driver: user._id });
     console.log("Found cab:", JSON.stringify(cab, null, 2));
 
@@ -113,7 +111,6 @@ export async function PUT(req: Request) {
       );
     }
 
-    // Update the cab fields
     cab.name = name;
     cab.pricePerMinute = pricePerMinute;
     cab.type = type;
@@ -121,7 +118,6 @@ export async function PUT(req: Request) {
 
     console.log("Cab before save:", JSON.stringify(cab, null, 2));
 
-    // Save the updated cab
     cab = await cab.save();
     console.log({ cab });
 

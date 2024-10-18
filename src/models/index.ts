@@ -1,5 +1,3 @@
-// models/index.ts
-
 import mongoose from "mongoose";
 
 export enum CabType {

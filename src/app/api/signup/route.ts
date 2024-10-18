@@ -1,4 +1,3 @@
-// app/api/signup/route.ts
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import { User } from "@/models";
@@ -9,7 +8,6 @@ export async function POST(req: Request) {
 
   const { name, email, password, role } = await req.json();
 
-  // Basic validation
   if (!name || !email || !password || !role) {
     return NextResponse.json(
       { error: "Missing required fields" },
@@ -18,7 +16,6 @@ export async function POST(req: Request) {
   }
 
   try {
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
@@ -27,10 +24,8 @@ export async function POST(req: Request) {
       );
     }
 
-    // Hash password
     const hashedPassword = await hash(password, 12);
 
-    // Create new user
     const user = await User.create({
       name,
       email,

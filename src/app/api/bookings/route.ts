@@ -1,4 +1,3 @@
-// app/api/bookings/route.ts
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
@@ -6,6 +5,7 @@ import dbConnect from "@/lib/dbConnect";
 import { Booking, Route, Cab, Location, updateBookingStatus } from "@/models";
 import { findShortestPath } from "@/utils/graph";
 import mongoose from "mongoose";
+import { sendBookingConfirmationEmail } from "@/utils/email";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -22,7 +22,6 @@ export async function POST(req: Request) {
   try {
     const { source, destination, cabId } = await req.json();
 
-    // Validate inputs
     if (!source || !destination || !cabId) {
       console.log({ source, destination, cabId });
       return NextResponse.json(
@@ -31,7 +30,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate ObjectIds
     if (
       !mongoose.isValidObjectId(source) ||
       !mongoose.isValidObjectId(destination) ||
@@ -119,6 +117,15 @@ export async function POST(req: Request) {
       status: "Pending",
     });
 
+    // Populate the booking with related data for the email
+    const populatedBooking = await Booking.findById(booking._id)
+      .populate("source")
+      .populate("destination")
+      .populate("cab");
+
+    // Send confirmation email
+    await sendBookingConfirmationEmail(populatedBooking);
+
     return NextResponse.json(
       { success: true, data: { booking, path, duration, cost } },
       { status: 201 }
@@ -149,14 +156,12 @@ export async function GET() {
       userEmail: session.user.email,
     }).populate("cab source destination");
 
-    // Update status for each booking
     const updatedBookings = await Promise.all(
       bookings.map(async (booking) => {
         return await updateBookingStatus(booking);
       })
     );
 
-    // Sort the updated bookings based on start time
     const sortedBookings = updatedBookings.sort((a, b) => {
       return new Date(b.startTime).getTime() - new Date(a.startTime).getTime();
     });

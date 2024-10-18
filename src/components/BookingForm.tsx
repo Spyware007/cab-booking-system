@@ -377,7 +377,6 @@ export default function BookingForm() {
         </>
       )}
 
-      {/* Confirmation Dialog */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
           <DialogHeader>
