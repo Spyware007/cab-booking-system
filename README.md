@@ -45,22 +45,27 @@ npm run dev
 
 ## Screenshots
 
+<div align="center" style="display:flex">
+  <img width="500px" src="./readme_assets/imag31.png">
+</div>
+
 <table>
-<tr>
- <td><img src="readme_assets/image1.png" width="250" alt="Home Page"></td>
- <td><img src="readme_assets/image2.png" width="250" alt="Booking Form"></td>
- <td><img src="readme_assets/image3.png" width="250" alt="Admin Dashboard"></td>
-</tr>
-<tr>
- <td><img src="readme_assets/image4.png" width="250" alt="Location Management"></td>
- <td><img src="readme_assets/image5.png" width="250" alt="Route Management"></td>
- <td><img src="readme_assets/image6.png" width="250" alt="Cab Management"></td>
-</tr>
-<tr>
- <td><img src="readme_assets/image7.png" width="250" alt="Booking History"></td>
- <td><img src="readme_assets/image8.png" width="250" alt="User Profile"></td>
- <td></td>
-</tr>
+  <tr>
+    <td><img width="500px" src="readme_assets/image2.png" alt="Home Page"></td>
+    <td><img width="500px" src="readme_assets/image3.png" alt="Booking Form"></td>
+  </tr>
+  <tr>
+    <td><img width="500px" src="readme_assets/image4.png" alt="Admin Dashboard"></td>
+    <td><img width="500px" src="readme_assets/image5.png" alt="Location Management"></td>
+  </tr>
+  <tr>
+    <td><img width="500px" src="readme_assets/image6.png" alt="Route Management"></td>
+    <td><img width="500px" src="readme_assets/image7.png" alt="Cab Management"></td>
+  </tr>
+  <tr>
+    <td><img width="500px" src="readme_assets/image8.png" alt="Booking History"></td>
+    <td><img width="500px" src="readme_assets/image9.png" alt="User Profile"></td>
+  </tr>
 </table>
 
 ## Contributing
